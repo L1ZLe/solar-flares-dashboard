@@ -61,6 +61,7 @@ def load_data(path: str) -> pd.DataFrame:
 # -----------------------------
 try:
     df = load_data(DATA_PATH)
+
 except Exception as e:
     st.error(f"Could not load data from: {DATA_PATH}")
     st.exception(e)
@@ -105,6 +106,7 @@ only_peaks = st.sidebar.checkbox("Only EVENT_PEAK rows", value=True)
 
 # Apply filters
 f = df.copy()
+
 f = f[(f["Date"] >= start) & (f["Date"] <= end)]
 
 if class_choices:
@@ -113,13 +115,13 @@ if class_choices:
 if "Flux" in f.columns:
     f = f[f["Flux"] >= min_flux]
 
-if only_peaks and "Status" in f.columns:
-    f = f[f["Status"].astype(str).str.upper().eq("EVENT_PEAK")]
 
 # -----------------------------
 # Top KPIs
 # -----------------------------
+
 k1, k2, k3, k4 = st.columns(4)
+
 k1.metric("Events", f.shape[0])
 k2.metric("Max peak flux", f"{f['Flux'].max():.3e}" if f["Flux"].notna().any() else "—")
 k3.metric("Top class", f"{f['ClassLetter'].dropna().max()}" if f["ClassLetter"].notna().any() else "—")
